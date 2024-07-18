@@ -8,14 +8,16 @@ public class Main {
         String user = "root";
         String password = "123456";
         PreparedStatement pstmt = null;
+        Connection conn = null;
 
 
-        try (Connection connection= DriverManager.getConnection(url,user,password)){
+        try {
+            conn = DriverManager.getConnection(url, user, password);
 
             System.out.println("Conectado a ala base de datos");
             String sql="update estudiantes set b1 = ? where cedula = ?";
 
-            pstmt = connection.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,12);
             pstmt.setString(2,"0052717064");
             pstmt.executeUpdate();
@@ -25,6 +27,20 @@ public class Main {
 
         } catch (SQLException e1) {
             System.out.println(e1);
+        }finally {
+            //cerrar la conexion con la base
+
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
         }
 
     }
